@@ -11,18 +11,10 @@ def solution(p: float, x: np.array) -> tuple:
     # Это будет вашим решением
     # Не меняйте название функции и её аргументы
     # Вычисляем выборочное среднее и выборочную дисперсию
-    mean = np.mean(distances)
-    variance = np.var(distances)
-
-    # Вычисляем статистику критерия
-    chi2_stat = sum([(d ** 2) / (24 * variance) for d in distances])
-
-    # Находим границы доверительного интервала
-    alpha = 1 - confidence_level
-    df = len(distances)
-    chi2_left = chi2.ppf(alpha / 2, df)
-    chi2_right = chi2.ppf(1 - alpha / 2, df)
-    left_boundary = np.sqrt(chi2_stat / chi2_right)
-    right_boundary = np.sqrt(chi2_stat / chi2_left)
-
-    return (left_boundary, right_boundary)
+    alpha = 1 - p
+    chi2_stat = np.sum(x**2) / len(x) / 24
+    chi2_left = chi2.ppf(alpha / 2, df=2 * len(x))
+    chi2_right = chi2.ppf(1 - alpha / 2, df=2 * len(x))
+    left_boundary = np.sqrt((len(x) * chi2_stat) / chi2_right)
+    right_boundary = np.sqrt((len(x) * chi2_stat) / chi2_left)
+    return left_boundary, right_boundary
